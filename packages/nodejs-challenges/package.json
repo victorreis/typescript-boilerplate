@@ -1,0 +1,31 @@
+{
+  "name": "nodejs-challenges",
+  "version": "0.0.0",
+  "description": "The NodeJS back end to deal with the challenge management.",
+  "author": "victor.reis <v.crisostomo.reis@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/victorreis/challenge-solving-platform/tree/main/packages/nodejs-challenges#readme",
+  "keywords": [
+    "nodejs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorreis/challenge-solving-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/victorreis/challenge-solving-platform/issues"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "main": "lib/nodejs-challenges.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

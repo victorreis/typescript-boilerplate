@@ -1,0 +1,32 @@
+{
+  "name": "angular",
+  "version": "0.0.0",
+  "description": "Angular front end for the challenge solving platform.",
+  "author": "victor.reis <v.crisostomo.reis@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/victorreis/challenge-solving-platform/tree/main/packages/angular#readme",
+  "keywords": [
+    "angular",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorreis/challenge-solving-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/victorreis/challenge-solving-platform/issues"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "main": "lib/angular.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

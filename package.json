@@ -1,0 +1,28 @@
+{
+  "name": "challenge-solving-platform",
+  "version": "0.0.0",
+  "description": "A monorepo project to challenge solving studies and to test technologies, frameworks, patterns and concepts.",
+  "author": "Victor Reis <v.crisostomo.reis@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/victorreis/challenge-solving-platform#readme",
+  "keywords": [
+    "monorepo",
+    "challenge",
+    "solving",
+    "study"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorreis/challenge-solving-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/victorreis/challenge-solving-platform/issues"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
