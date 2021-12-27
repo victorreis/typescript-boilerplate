@@ -1,12 +1,12 @@
 {
-  "name": "nodejs-challenges",
+  "name": "expressjs-challenges",
   "version": "0.0.0",
-  "description": "The NodeJS back end to deal with the challenge management.",
+  "description": "The expressjs back end to deal with the challenge management.",
   "author": "victor.reis <v.crisostomo.reis@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/victorreis/challenge-solving-platform/tree/main/packages/nodejs-challenges#readme",
+  "homepage": "https://github.com/victorreis/challenge-solving-platform/tree/main/packages/expressjs-challenges#readme",
   "keywords": [
-    "nodejs"
+    "expressjs"
   ],
   "repository": {
     "type": "git",
@@ -22,10 +22,16 @@
   "files": [
     "lib"
   ],
-  "main": "lib/nodejs-challenges.js",
+  "main": "lib/expressjs-challenges.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  }
 }
