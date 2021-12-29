@@ -1,6 +1,7 @@
 {
   "name": "challenge-solving-platform",
   "version": "0.0.0",
+  "private": true,
   "description": "A monorepo project to challenge solving studies and to test technologies, frameworks, patterns and concepts.",
   "author": "Victor Reis <v.crisostomo.reis@gmail.com>",
   "license": "MIT",
@@ -21,7 +22,12 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "bootstrap": "lerna bootstrap",
+    "build:angular": "lerna run --scope angular build --stream",
+    "start:angular": "lerna run --scope angular start --stream",
+    "watch:angular": "lerna run --scope angular watch --stream",
+    "test:angular": "lerna run --scope angular test --stream"
   },
   "devDependencies": {
     "commitizen": "^4.2.4",
@@ -29,5 +35,8 @@
     "lerna": "^4.0.0",
     "husky": "^7.0.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "workspaces": [
+    "packages/*"
+  ]
 }
