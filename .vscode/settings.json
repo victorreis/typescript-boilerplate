@@ -15,7 +15,7 @@
   "editor.formatOnType": false,
   "editor.linkedEditing": true,
   "editor.renderWhitespace": "boundary",
-  "eslint.workingDirectories": ["./../packages/**/*"],
+  "eslint.workingDirectories": ["../packages/**/*"],
   "files.autoSave": "off",
   "files.encoding": "utf8",
   "files.exclude": {
