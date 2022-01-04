@@ -8,5 +8,8 @@
     }
   },
   "useWorkspaces": true,
-  "packages": ["angular", "expressjs-challenges"]
+  "packages": [
+    "@challenge-solving/angular",
+    "@challenge-solving/expressjs-challenges"
+  ]
 }

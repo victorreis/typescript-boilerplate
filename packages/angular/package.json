@@ -1,5 +1,5 @@
 {
-  "name": "angular",
+  "name": "@challenge-solving/angular",
   "version": "0.0.0",
   "description": "Angular front end for the challenge solving platform.",
   "author": "victor.reis <v.crisostomo.reis@gmail.com>",
@@ -29,7 +29,7 @@
     "start": "ng serve --open",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --no-watch"
   },
   "dependencies": {
     "@angular/animations": "~13.1.0",

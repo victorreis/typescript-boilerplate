@@ -1,5 +1,5 @@
 {
-  "name": "expressjs-challenges",
+  "name": "@challenge-solving/expressjs-challenges",
   "version": "0.0.0",
   "description": "The expressjs back end to deal with the challenge management.",
   "author": "victor.reis <v.crisostomo.reis@gmail.com>",
