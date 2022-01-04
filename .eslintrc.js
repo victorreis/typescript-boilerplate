@@ -101,7 +101,7 @@ module.exports = {
           caseInsensitive: true,
           ignoreCase: true,
         },
-        groups: [['parent', 'sibling', 'index']],
+        groups: ['/^react/', 'module', ['parent', 'sibling', 'index']],
       },
     ],
     'no-alert': 2,
