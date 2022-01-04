@@ -21,22 +21,53 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "test",
     "prepare": "husky install",
     "bootstrap": "lerna bootstrap",
-    "build:angular": "lerna run --scope angular build --stream",
-    "start:angular": "lerna run --scope angular start --stream",
-    "watch:angular": "lerna run --scope angular watch --stream",
-    "test:angular": "lerna run --scope angular test --stream"
+    "clean:branches": "git branch ---merged | egrep -v '(^*|master|dev)' | xargs git branch -d",
+    "clean:node_modules": "lerna clean && rm -Rf node_modules",
+    "lint": "eslint --quiet --fix . -c ./.eslintrc.js",
+    "lint:report": "yarn lint -f json -o reports/eslint-report.json",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --config .prettierrc --write .",
+    "build:angular": "lerna run --scope @challenge-solving/angular build --stream",
+    "start:angular": "lerna run --scope @challenge-solving/angular start --stream",
+    "watch:angular": "lerna run --scope @challenge-solving/angular watch --stream",
+    "test:angular": "lerna run --scope @challenge-solving/angular test --stream",
+    "test": "yarn test:angular"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.10.3",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
+    "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^16.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import-helpers": "^1.2.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-markdown": "^2.2.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "^7.0.4",
     "lerna": "^4.0.0",
-    "husky": "^7.0.0"
+    "lint-staged": "^12.1.5",
+    "prettier": "^2.5.1",
+    "stylelint": "^14.2.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-prettier": "^2.0.0"
   },
   "dependencies": {},
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": []
+  }
 }
