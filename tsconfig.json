@@ -47,7 +47,7 @@
         "./packages/expressjs-challenges/src"
       ]
     },
-    "rootDirs": [],
+    // "rootDirs": [],
     "typeRoots": [
       "node_modules/@types",
       "node_modules/@testing-library",

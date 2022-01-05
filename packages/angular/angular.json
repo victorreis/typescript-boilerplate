@@ -4,9 +4,9 @@
   "cli": {
     "packageManager": "yarn"
   },
-  "newProjectRoot": "projects",
+  "newProjectRoot": "",
   "projects": {
-    "@challenge-solving/angular": {
+    "angular": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -100,5 +100,5 @@
       }
     }
   },
-  "defaultProject": "@challenge-solving/angular"
+  "defaultProject": "angular"
 }
