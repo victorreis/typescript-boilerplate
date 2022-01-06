@@ -4,6 +4,7 @@
     "editor.formatOnSave": false
   },
   "diffEditor.ignoreTrimWhitespace": false,
+  "editor.bracketPairColorization.enabled": true,
   "editor.autoIndent": "full",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
@@ -13,6 +14,7 @@
   "editor.formatOnPaste": false,
   "editor.formatOnSave": true,
   "editor.formatOnType": false,
+  "editor.guides.bracketPairs": "active",
   "editor.linkedEditing": true,
   "editor.renderWhitespace": "boundary",
   "eslint.workingDirectories": ["../packages/**/*"],
