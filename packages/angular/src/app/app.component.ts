@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  public readonly title = 'angular';
+  public readonly title = 'Challenge Solving Platform - Angular';
 }

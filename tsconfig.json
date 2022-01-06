@@ -54,7 +54,7 @@
       "packages/angular/src/@types",
       "packages/expressjs-challenges/src/@types"
     ],
-    "types": ["node"],
+    "types": ["node", "jasmine"],
     // "allowUmdGlobalAccess": true,
     "resolveJsonModule": true,
     // "noResolve": true,
