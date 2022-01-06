@@ -30,13 +30,15 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --config .prettierrc --write .",
     "build:angular": "lerna run --scope @challenge-solving/angular build --stream",
+    "build:expressjs-challenges": "lerna run --scope @challenge-solving/expressjs-challenges build --stream",
+    "build:": "yarn build:angular && yarn build:expressjs-challenges",
     "start:angular": "lerna run --scope @challenge-solving/angular start --stream",
     "watch:angular": "lerna run --scope @challenge-solving/angular watch --stream",
     "test:angular": "lerna run --scope @challenge-solving/angular test --stream",
+    "test:expressjs-challenges": "lerna run --scope @challenge-solving/expressjs-challenges test --stream",
     "test": "yarn test:angular"
   },
   "devDependencies": {
-    "@types/jasmine": "^3.10.3",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "babel-eslint": "^10.1.0",
@@ -63,7 +65,6 @@
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-prettier": "^2.0.0"
   },
-  "dependencies": {},
   "workspaces": {
     "packages": [
       "packages/*"

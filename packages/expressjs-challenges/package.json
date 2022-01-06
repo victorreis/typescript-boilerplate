@@ -24,6 +24,7 @@
   ],
   "main": "lib/expressjs-challenges.js",
   "scripts": {
+    "build": "",
     "start": "node ./bin/www",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
