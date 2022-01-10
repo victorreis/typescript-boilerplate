@@ -3,8 +3,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "experimentalDecorators": true,
-    "types": ["jasmine"]
+    "experimentalDecorators": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

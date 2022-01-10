@@ -39,9 +39,9 @@
     "test": "yarn test:angular"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.16.5",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
-    "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.6.0",
@@ -50,7 +50,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-import-helpers": "^1.2.0",
+    "eslint-plugin-import-helpers": "^1.2.1",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-markdown": "^2.2.1",
     "eslint-plugin-prettier": "^4.0.0",
@@ -59,10 +59,11 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
-    "lint-staged": "^12.1.5",
+    "lint-staged": "^12.1.7",
     "prettier": "^2.5.1",
     "stylelint": "^14.2.0",
     "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended": "^6.0.0",
     "stylelint-prettier": "^2.0.0"
   },
   "workspaces": {

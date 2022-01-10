@@ -1,11 +1,9 @@
 {
   /* Visit https://aka.ms/tsconfig.json to read more about this file */
   "compileOnSave": true,
-  "include": ["packages/*/src/**/*.ts", "packages/*/src/**/*.tsx"],
+  "include": ["packages/*/src"],
   "exclude": [
     "**/node_modules",
-    "**/*.d.ts",
-    "**/*.d.tsx",
     "**/.*",
     "**/build",
     "**/docs",
@@ -24,14 +22,14 @@
     "disableSizeLimit": true,
 
     /* Language and Environment */
-    "target": "esnext",
-    "lib": ["esnext", "dom"],
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     // "jsxFactory": "",
     // "jsxFragmentFactory": "",
-    "jsxImportSource": "react-jsx",
+    // "jsxImportSource": "react-jsx",
     // "reactNamespace": "",
     // "noLib": true,
     "useDefineForClassFields": true,
@@ -72,7 +70,7 @@
     // "outFile": "./",
     "outDir": "./dist",
     "removeComments": true,
-    // "noEmit": true,
+    "noEmit": true,
     "importHelpers": true,
     // "importsNotUsedAsValues": "remove",
     "downlevelIteration": true,
@@ -101,7 +99,7 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
+    // "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "useUnknownInCatchVariables": true,
     "alwaysStrict": true,

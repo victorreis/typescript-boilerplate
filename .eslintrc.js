@@ -7,10 +7,20 @@ module.exports = {
     jest: true,
   },
   globals: {
-    window: 'readonly',
+    context: true,
     document: 'readonly',
-    FormData: 'readonly',
     EventSource: 'readonly',
+    expect: true,
+    FormData: 'readonly',
+    google: true,
+    jsdom: true,
+    JSX: true,
+    mount: true,
+    mountWithRouter: true,
+    React: true,
+    shallow: true,
+    shallowWithRouter: true,
+    window: 'readonly',
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -70,7 +80,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/all',
+    'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   plugins: [
@@ -83,9 +93,10 @@ module.exports = {
     'react-hooks',
     '@typescript-eslint',
   ],
-
   rules: {
-    '@typescript-eslint/explicit-member-accessibility': 2,
+    '@typescript-eslint/explicit-member-accessibility': 0,
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-extraneous-class': 0,
     'comma-dangle': 0,
     '@typescript-eslint/comma-dangle': 0,
@@ -139,6 +150,13 @@ module.exports = {
     ],
     radix: 2,
     'react/destructuring-assignment': 2,
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ],
     'react/jsx-props-no-spreading': 0,
     'react/jsx-filename-extension': [
       2,
@@ -146,6 +164,7 @@ module.exports = {
         extensions: ['.jsx', '.tsx'],
       },
     ],
+    'react/jsx-no-literals': 0,
     'react/prop-types': 0,
     'react/self-closing-comp': [
       2,
