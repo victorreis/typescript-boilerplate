@@ -5,12 +5,12 @@
 ### Pre configuration
 
 1. Run `wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
-1. Run `nvm install 17`
-1. Run `nvm use 17`
+1. Run `nvm install 16`
+1. Run `nvm use 16`
 1. Create `.npmrc` and add this to it:
 
 ```plain-text:
-node-version=17.x.x
+node-version=16.x.x
 engine-strict=true
 package-lock=false
 registry=https://registry.npmjs.org/
@@ -470,6 +470,7 @@ module.exports = {
     '@typescript-eslint/explicit-member-accessibility': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-extraneous-class': 0,
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': [2, { varsIgnorePattern: 'React' }],
@@ -538,14 +539,16 @@ module.exports = {
         unnamedComponents: 'arrow-function',
       },
     ],
-    'react/jsx-props-no-spreading': 0,
+    'react/jsx-child-element-spacing': 0,
     'react/jsx-filename-extension': [
       2,
       {
         extensions: ['.jsx', '.tsx'],
       },
     ],
+    'react/jsx-props-no-spreading': 0,
     'react/jsx-max-depth': [2, { max: 3 }],
+    'react/jsx-newline': 0,
     'react/jsx-no-literals': 0,
     'react/prop-types': 0,
     'react/self-closing-comp': [
@@ -727,7 +730,6 @@ import 'styled-components';
 import { PhotoDiscoveryThemeType } from './Theme/Types/PhotoDiscoveryTheme.types';
 
 declare module 'styled-components' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface DefaultTheme extends PhotoDiscoveryThemeType {}
 }
 
@@ -824,7 +826,6 @@ import 'styled-components';
 import { CustomThemeType } from './Theme/Types';
 
 declare module 'styled-components' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface DefaultTheme extends CustomThemeType {}
 }
 
@@ -1214,7 +1215,7 @@ export interface Default{{ inputs.value | pascal }}Props {
 }
 
 export interface Optional{{ inputs.value | pascal }}Props {
-  style?: CSSStyleDeclaration;
+  style?: React.CSSProperties;
 }
 
 export type {{ inputs.value | pascal }}Props = Required{{ inputs.value | pascal }}Props &
