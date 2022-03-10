@@ -20,14 +20,14 @@ registry=https://registry.npmjs.org/
 
 ```plain-text:
 * text=auto eol=lf
-
 ```
 
 ### Initial configuration
 
 1. Initialize git repository or clone
 1. Run `npm init`
-1. Run `npm i -g @angular/cli commitizen lerna lerna-wizard yarn`
+1. Delete the `homepage` attribute inside the `package.json`
+1. Run `npm i -g lerna lerna-wizard yarn`
 1. Run `lerna-wizard` and create your package
 1. Create `.gitignore` with the following code:
 
@@ -77,7 +77,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.tsbuildinfo
-
 ```
 
 1. Add these scripts to `package.json` scripts:
@@ -102,7 +101,6 @@ yarn-error.log*
   "useWorkspaces": true,
   "packages": ["@challenge-solving/angular", "@challenge-solving/expressjs-challenges"]
 }
-
 ```
 
 1. Add this code to `package.json`:
@@ -137,7 +135,6 @@ quote_type = single
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
-
 ```
 
 ### Configuring the workspace
@@ -153,7 +150,7 @@ trim_trailing_whitespace = false
 {
   /* Visit https://aka.ms/tsconfig.json to read more about this file */
   "compileOnSave": true,
-  "include": ["packages/*/src"],
+  "include": ["packages/*/src/**/*"],
   "exclude": [
     "**/node_modules",
     "**/.*",
@@ -217,7 +214,7 @@ trim_trailing_whitespace = false
     // ],
 
     /* JavaScript Support */
-    // "allowJs": true,
+    "allowJs": true,
     // "checkJs": true,
     // "maxNodeModuleJsDepth": 1,
 
@@ -277,8 +274,6 @@ trim_trailing_whitespace = false
     "skipLibCheck": true
   }
 }
-
-
 ```
 
 ### Configuring prettier
@@ -311,7 +306,6 @@ __snapshots__
   "trailingComma": "es5",
   "useTabs": false
 }
-
 ```
 
 ### Configuring eslint
@@ -329,7 +323,6 @@ stylelint-config-recommended \
 stylelint-prettier \
 @typescript-eslint/eslint-plugin \
 @typescript-eslint/parser \
-@babel/eslint-parser \
 eslint \
 eslint-config-airbnb \
 eslint-config-airbnb-typescript \
@@ -356,10 +349,9 @@ eslint-plugin-react-hooks
   ],
   "ignoreFiles": ["**/*.d.ts"]
 }
-
 ```
 
-1. Replace `.eslint.js` content to this:
+1. Replace `.eslintrc.js` content to this:
 
 ```js:
 module.exports = {
@@ -445,6 +437,7 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:jest/recommended',
     'plugin:jest/style',
+    'plugin:jest-react/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:markdown/recommended',
     'plugin:prettier/recommended',
@@ -452,8 +445,6 @@ module.exports = {
     'plugin:react/all',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
-    'react-app',
-    'react-app/jest',
   ],
   plugins: [
     'import',
@@ -465,6 +456,7 @@ module.exports = {
     'react-hooks',
     '@typescript-eslint',
     'jest',
+    'jest-react',
   ],
   rules: {
     '@typescript-eslint/explicit-member-accessibility': 0,
@@ -472,13 +464,14 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-extraneous-class': 0,
+    '@typescript-eslint/no-floating-promises': 0,
+    '@typescript-eslint/no-misused-promises': 0,
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': [2, { varsIgnorePattern: 'React' }],
     'comma-dangle': 0,
     '@typescript-eslint/comma-dangle': 0,
     'no-use-before-define': 0,
     '@typescript-eslint/no-use-before-define': 2,
-
     curly: 2,
     'import/order': 0,
     'import/prefer-default-export': 0,
@@ -494,6 +487,7 @@ module.exports = {
         groups: ['/^react/', 'module', ['parent', 'sibling', 'index']],
       },
     ],
+    'jest/no-conditional-expect': 0,
     'jest/no-disabled-tests': 'warn',
     'jest/no-focused-tests': 'error',
     'jest/no-identical-title': 'error',
@@ -512,11 +506,9 @@ module.exports = {
     'no-plusplus': 0,
     'no-restricted-syntax': [
       2,
-      'ForStatement',
       'ForInStatement',
       'ForOfStatement',
       'DoWhileStatement',
-      'WhileStatement',
       'WithStatement',
       'TSEnumDeclaration',
     ],
@@ -550,6 +542,7 @@ module.exports = {
     'react/jsx-max-depth': [2, { max: 3 }],
     'react/jsx-newline': 0,
     'react/jsx-no-literals': 0,
+    'react/jsx-one-expression-per-line': 0,
     'react/prop-types': 0,
     'react/self-closing-comp': [
       2,
@@ -560,18 +553,25 @@ module.exports = {
     ],
     'react-hooks/exhaustive-deps': 2,
     'react-hooks/rules-of-hooks': 2,
+    'testing-library/await-async-query': 0,
+    'testing-library/no-await-sync-query': 0,
   },
   overrides: [
     {
-      files: ['src/**/*.test.tsx'],
+      files: ['*.ts', '*.tsx'],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+    },
+    {
+      files: ['src/**/*.test.tsx', 'src/**/*.test.ts', 'src/**/*.config.tsx'],
       rules: {
+        'import/no-extraneous-dependencies': 0,
         'testing-library/await-async-query': 0,
       },
     },
   ],
 };
-
-
 ```
 
 1. Copy and paste `.gitignore`, rename to `.eslintignore` and add this code to the end:
@@ -582,22 +582,52 @@ __snapshots__
 *.js
 ```
 
+### [REACT ONLY] React configuration
+
+1. Run `yarn create react-app twitter-alike-social-media --template typescript`
+1. Replace the `dependencies`, `devDependencies` and the `eslintConfig` into `package.json` to this:
+
+```json
+"devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
+    "typescript": "^4.4.2",
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.0",
+    "web-vitals": "^2.1.0"
+  },
+```
+
 ### [REACT ONLY] Configuring Styled Components
 
-1. Run `yarn add -W styled-components` and then the scripts below:
+1. Run `yarn add styled-components` and then the scripts below:
 
 ```sh:
-yarn add -D -W "@types/styled-components" \
+yarn add -D @babel/core \
+@babel/preset-env \
+@babel/preset-react \
+@babel/preset-typescript \
+@types/styled-components \
 @types/styled-theming \
 babel-plugin-styled-components \
 jest-styled-components \
 styled-normalize \
 styled-theming \
+stylelint \
+stylelint-config-prettier \
 stylelint-config-recommended \
 stylelint-config-styled-components \
+stylelint-prettier \
 stylelint-processor-styled-components \
-typescript-plugin-styled-components \
-
+typescript-plugin-styled-components
 ```
 
 1. Update `.stylelintrc` to this:
@@ -610,9 +640,11 @@ typescript-plugin-styled-components \
     "stylelint-config-prettier",
     "stylelint-config-styled-components"
   ],
-  "ignoreFiles": ["**/*.d.ts"]
+  "ignoreFiles": ["**/*.d.ts"],
+  "rules": {
+    "property-no-vendor-prefix": null
+  }
 }
-
 ```
 
 1. Update `babel.config.js` to this:
@@ -641,7 +673,6 @@ module.exports = {
     ],
   ],
 };
-
 ```
 
 1. Update the `lint` script into `package.json` to this:
@@ -650,6 +681,7 @@ module.exports = {
 "lint:ts": "eslint --quiet --fix . -c ./.eslintrc.js",
 "lint:css": "stylelint './src/**/*.styles.ts' --config .stylelintrc -f verbose",
 "lint": "yarn lint:ts && yarn lint:css",
+"lint:report": "yarn lint -f json -o reports/eslint-report.json",
 ```
 
 1. Uncomment the code below into tsconfig.json:
@@ -665,6 +697,30 @@ module.exports = {
 ```
 
 1. Delete `src/App.css` and `src/index.css` and ther respective imports in `src/App.tsx` and `src/index.tsx`.
+
+1. Update the `src/App.tsx` file to this code:
+
+```tsx:
+export function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+```
 
 1. Add the normalize to `src/index.tsx` by updating the code to this:
 
@@ -688,7 +744,6 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 // reportWebVitals();
-
 ```
 
 ### [REACT ONLY] Configuring thematization
@@ -700,11 +755,11 @@ import { Borders } from './Borders.types';
 import { Colors } from './Colors.types';
 import { Typographies } from './Typographies.types';
 
-const availableModes = ['light', 'dark', 'futuristic', 'deepSpace'] as const;
-export type Mode = typeof availableModes[number];
+export const availableThemeModes = ['dark', 'deepSpace'] as const;
+export type ThemeMode = typeof availableThemeModes[number];
 
 export interface CustomThemeType {
-  mode: Mode;
+  mode: ThemeMode;
   colors: Colors;
   borders: Borders;
   typographies: Typographies;
@@ -716,7 +771,6 @@ export interface CustomThemeType {
   acessibilities: undefined;
   animations: undefined;
 }
-
 ```
 
 1. In the same folder, create the files `Borders.types.ts`, `Colors.types.ts`, `Typographies.types.ts`, `Sizes.types.ts` with their respectively types.
@@ -732,7 +786,6 @@ import { PhotoDiscoveryThemeType } from './Theme/Types/PhotoDiscoveryTheme.types
 declare module 'styled-components' {
   export interface DefaultTheme extends PhotoDiscoveryThemeType {}
 }
-
 ```
 
 1. Create the file `src/Theme/CustomThemeProvider/CustomThemeProvider.types.ts` and add this code:
@@ -746,7 +799,6 @@ export type ThemeContextType = {
 };
 
 export type CustomThemeProviderProps = { testID?: string; themeName?: Mode };
-
 ```
 
 1. Create the file `src/Theme/CustomThemeProvider/CustomThemeProvider.tsx` and add this code:
@@ -808,15 +860,12 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (
     </ThemeContext.Provider>
   );
 };
-
-
 ```
 
 1. Create the file `src/Theme/CustomThemeProvider/index.ts` and add this code:
 
 ```ts:
 export * from './CustomThemeProvider';
-
 ```
 
 1. Create the file `src/globals.d.ts` and add this code:
@@ -829,6 +878,10 @@ declare module 'styled-components' {
   export interface DefaultTheme extends CustomThemeType {}
 }
 
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
 ```
 
 1. Create the file `src/App.styles.ts` and add this code:
@@ -837,12 +890,36 @@ declare module 'styled-components' {
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.default};
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  background-color: ${({ theme }) => theme.colors.background.default.darkest};
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.background.default.normal};
+  }
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.background.default.light};
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.background.default.darker}cc;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background: ${({ theme }) => theme.colors.background.default.light}cc;
+  }
 `;
 
+export const PageContainer = styled.div`
+  padding: 0 2rem;
+  margin-bottom: 5rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+`;
 ```
 
 1. Replace the code of the file `src/App.tsx` with this code:
@@ -860,22 +937,16 @@ export const App: React.FC = (): JSX.Element => {
     </CustomThemeProvider>
   );
 };
-
-
 ```
 
-1. Delete the files `src/logo.svg`, `src/App.css` and `index.css`.
+1. Delete the files `src/logo.svg`, `src/App.css`, `index.css` and `setupTests.ts`.
 
 ### [REACT ONLY] Configuring Jest + Babel + TypeScript
 
 1. Run the following command:
 
 ```sh:
-yarn add --dev @babel/core \
-@babel/preset-env \
-@babel/preset-react \
-@babel/preset-typescript \
-@testing-library/jest-dom \
+yarn add -D @testing-library/jest-dom \
 @testing-library/react \
 @testing-library/user-event \
 @types/jest \
@@ -891,10 +962,10 @@ jest-styled-components \
 jest-svg-transformer \
 jest-transform-stub \
 node-notifier \
-react-test-renderer \
+react-test-renderer
 ```
 
-1. Add the following npm script to package.json:
+1. Replace the `test` script in package.json to:
 
 ```json:
 "test": "jest --config=jest.config.js",
@@ -939,7 +1010,14 @@ module.exports = {
   // coverageReporters: ['json', 'text', 'lcov', 'clover'],
 
   // An object that configures minimum threshold enforcement for coverage results
-  // coverageThreshold: undefined,
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,
@@ -1015,7 +1093,7 @@ module.exports = {
   // runner: 'jest-runner',
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ['dotenv/config'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
@@ -1081,7 +1159,6 @@ module.exports = {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
-
 ```
 
 1. Create the file `src/Config/Tests/GlobalSetup.config.tsx` and copy and paste the following code:
@@ -1118,7 +1195,6 @@ const renderRTRCreator = <ComponentProps extends Record<string, any>>(
 global.React = React;
 export * from '@testing-library/react';
 export { renderJestDomCreator, renderRTRCreator };
-
 ```
 
 1. Create the file `src/Config/Tests/test.types.ts` and add the following code:
@@ -1127,10 +1203,9 @@ export { renderJestDomCreator, renderRTRCreator };
 export interface TestProps {
   testID?: string;
 }
-
 ```
 
-1. Create the file `src/App.test.ts` and add the following code:
+1. Create the file `src/App.test.tsx` and add the following code:
 
 ```ts:
 import { App } from './App';
@@ -1140,6 +1215,7 @@ import {
   screen,
 } from './Config/Tests/GlobalSetup.config';
 import { themes } from './Theme/CustomThemeProvider';
+import { hexToRgb } from './Utils/Transform/hexToRgb.util';
 
 describe('App component tests', () => {
   const setup = () => {
@@ -1164,21 +1240,21 @@ describe('App component tests', () => {
       const container = screen.getByTestId('container');
 
       expect(container).toHaveStyle({
-        backgroundColor: themes.default.colors.background.default,
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
+        backgroundColor: hexToRgb(
+          themes.default.colors.background.default.darkest
+        ),
+        width: '100%',
+        height: '100%',
+        overflowX: 'hidden',
       });
     });
   });
 });
-
-
 ```
 
 ### [REACT ONLY] Configure Scaffolding
 
-1. Run `yarn add -D -W scaffdog`
+1. Run `yarn add -D scaffdog`
 1. Run `yarn scaffdog init` and then enter `component`
 1. Replace the content of `.scaffdog/component.md` with this:
 
@@ -1207,14 +1283,24 @@ import { TestProps } from '../../Config/Tests/Test.types';
 import { TypographyVariant } from '../../Theme/Types/Typographies.types';
 
 export interface Required{{ inputs.value | pascal }}Props {
-  children: string;
+  /**
+   * Component's children.
+   */
+  children: React.ReactNode;
 }
 
 export interface Default{{ inputs.value | pascal }}Props {
+  /**
+   * Sets the component variant. It changes the HTML tag and the styles.
+   * @default 'body1'.
+   */
   variant?: TypographyVariant;
 }
 
 export interface Optional{{ inputs.value | pascal }}Props {
+  /**
+   * Sets the component styles.
+   */
   style?: React.CSSProperties;
 }
 
@@ -1225,7 +1311,6 @@ export type {{ inputs.value | pascal }}Props = Required{{ inputs.value | pascal 
   Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'>;
 
 export type {{ inputs.value | pascal }}StyleProps = Required<Default{{ inputs.value | pascal }}Props>;
-
 ```
 
 # `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.tsx`
@@ -1254,6 +1339,7 @@ export const {{ inputs.value | pascal }}: React.FC<{{ inputs.value | pascal }}Pr
     <{{ inputs.value | pascal }}Container
       as={typographyVariantToTag[variant]}
       data-testid={testID}
+      style={style}
       variant={variant}
       {...others}
     >
@@ -1261,7 +1347,6 @@ export const {{ inputs.value | pascal }}: React.FC<{{ inputs.value | pascal }}Pr
     </{{ inputs.value | pascal }}Container>
   );
 };
-
 ```
 
 # `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.styles.ts`
@@ -1275,7 +1360,6 @@ export const {{ inputs.value | pascal }}Container = styled.span<{{ inputs.value 
   color: ${({ theme }) => theme.colors.font.default};
   ${({ variant, theme }) => theme.typographies[variant]};
 `;
-
 ```
 
 # `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.test.tsx`
@@ -1368,14 +1452,270 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     });
   });
 });
+```
+````
 
+1. Create the file `.scaffdog/apiConsumerService.md` with this:
+
+````md:
+---
+name: 'API consumer service'
+root: '.'
+output: 'src/Services/'
+ignore: ['.', 'src/Services/**/*']
+questions:
+  value: 'Please, enter the service name:'
+---
+
+# `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.types.ts`
+
+```ts:
+export interface {{ inputs.value | pascal }} {
+  id: number;
+  albumId: number;
+  title: string;
+  url: string;
+  thumbnailUrl: string;
+}
 ```
 
+# `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.service.ts`
+
+```ts:
+import axios from 'axios';
+
+import { API_URL } from '../../Config/constants';
+import { requestErrorHandler } from '../ErrorHandler.service';
+import { {{ inputs.value | pascal }} } from './{{ inputs.value | pascal }}.types';
+
+const getAll = async () => {
+  const {{ inputs.value | camel }}s = await axios
+    .get<{{ inputs.value | pascal }}[]>(`${API_URL}/{{ inputs.value | camel }}s`)
+    .then((res) => res.data)
+    .catch(requestErrorHandler);
+
+  return {{ inputs.value | camel }}s;
+};
+
+const getByAlbumId = async (albumId: number) => {
+  const {{ inputs.value | camel }}s = await axios
+    .get<{{ inputs.value | pascal }}[]>(`${API_URL}/albums/${albumId}/{{ inputs.value | camel }}s`)
+    .then((res) => res.data)
+    .catch(requestErrorHandler);
+
+  return {{ inputs.value | camel }}s;
+};
+
+export const {{ inputs.value | camel }}Service = {
+  getAll,
+  getByAlbumId,
+};
+```
+
+# `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.service.test.ts`
+
+```ts:
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+
+import { API_URL, APPLICATION_ERROR } from '../../Config/constants';
+import { {{ inputs.value | camel }}Service } from './{{ inputs.value | pascal }}.service';
+import { {{ inputs.value | pascal }} } from './{{ inputs.value | pascal }}.types';
+
+describe(`{{ inputs.value | pascal }} service tests`, () => {
+  global.console.error = jest.fn();
+
+  const {{ inputs.value | camel }}sUrl = `${API_URL}/{{ inputs.value | camel }}s`;
+  const get{{ inputs.value | pascal }}sByAlbumIdUrl = (id: number | string) =>
+    `${API_URL}/albums/${id}/{{ inputs.value | camel }}s`;
+  const unexistentAlbumId = 9999;
+
+  const {{ inputs.value | camel }}sData: {{ inputs.value | pascal }}[] = [
+    {
+      albumId: 1,
+      id: 1,
+      title: 'accusamus beatae ad facilis cum similique qui sunt',
+      url: 'https://via.placeholder.com/600/92c952',
+      thumbnailUrl: 'https://via.placeholder.com/150/92c952',
+    },
+    {
+      albumId: 2,
+      id: 51,
+      title: 'non sunt voluptatem placeat consequuntur rem incidunt',
+      url: 'https://via.placeholder.com/600/8e973b',
+      thumbnailUrl: 'https://via.placeholder.com/150/8e973b',
+    },
+    {
+      albumId: 3,
+      id: 101,
+      title: 'incidunt alias vel enim',
+      url: 'https://via.placeholder.com/600/e743b',
+      thumbnailUrl: 'https://via.placeholder.com/150/e743b',
+    },
+  ];
+
+  const filterDataByAlbumId = (id: number) =>
+    {{ inputs.value | camel }}sData.filter(({{ inputs.value | camel }}) => {{ inputs.value | camel }}.albumId === id);
+
+  const server = setupServer(
+    rest.get({{ inputs.value | camel }}sUrl, (_req, res, ctx) => res(ctx.json({{ inputs.value | camel }}sData))),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(1), (_req, res, ctx) =>
+      res(ctx.json(filterDataByAlbumId(1)))
+    ),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(2), (_req, res, ctx) =>
+      res(ctx.json(filterDataByAlbumId(2)))
+    ),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(3), (_req, res, ctx) =>
+      res(ctx.json(filterDataByAlbumId(3)))
+    ),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(unexistentAlbumId), (_req, res, ctx) =>
+      res(ctx.json([]))
+    )
+  );
+  const serverError = setupServer(
+    rest.get({{ inputs.value | camel }}sUrl, (_req, res, ctx) => res(ctx.status(500))),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(1), (_req, res, ctx) =>
+      res(ctx.status(500))
+    ),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(2), (_req, res, ctx) =>
+      res(ctx.status(500))
+    ),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(3), (_req, res, ctx) =>
+      res(ctx.status(500))
+    ),
+    rest.get(get{{ inputs.value | pascal }}sByAlbumIdUrl(unexistentAlbumId), (_req, res, ctx) =>
+      res(ctx.status(500))
+    )
+  );
+
+  describe(`Successful tests`, () => {
+    beforeAll(() => server.listen());
+    afterEach(() => server.resetHandlers());
+    afterAll(() => server.close());
+
+    it(`should fetch data successfully from '${ {{ inputs.value | camel }}sUrl}'`, async () => {
+      const {{ inputs.value | camel }}s = await {{ inputs.value | camel }}Service.getAll();
+
+      expect({{ inputs.value | camel }}s).toEqual({{ inputs.value | camel }}sData);
+    });
+
+    it(`should fetch filtered data successfully from '${get{{ inputs.value | pascal }}sByAlbumIdUrl(
+      '{albumId}'
+    )}`, async () => {
+      const {{ inputs.value | camel }}s1 = await {{ inputs.value | camel }}Service.getByAlbumId(1);
+      expect({{ inputs.value | camel }}s1).toEqual(filterDataByAlbumId(1));
+
+      const {{ inputs.value | camel }}s2 = await {{ inputs.value | camel }}Service.getByAlbumId(2);
+      expect({{ inputs.value | camel }}s2).toEqual(filterDataByAlbumId(2));
+
+      const {{ inputs.value | camel }}s3 = await {{ inputs.value | camel }}Service.getByAlbumId(3);
+      expect({{ inputs.value | camel }}s3).toEqual(filterDataByAlbumId(3));
+    });
+
+    it(`should fetch no data successfully from '${get{{ inputs.value | pascal }}sByAlbumIdUrl(
+      '{albumId}'
+    )} when '{albumId}' doesn't exists`, async () => {
+      const {{ inputs.value | camel }}s = await {{ inputs.value | camel }}Service.getByAlbumId(unexistentAlbumId);
+      expect({{ inputs.value | camel }}s).toEqual(filterDataByAlbumId(unexistentAlbumId));
+    });
+  });
+
+  describe(`Unsuccessful tests`, () => {
+    beforeAll(() => serverError.listen());
+    afterEach(() => serverError.resetHandlers());
+    afterAll(() => serverError.close());
+
+    it(`should throw error when server returns status 500 when trying to fetch '${ {{ inputs.value | camel }}sUrl}'`, async () => {
+      try {
+        await {{ inputs.value | camel }}Service.getAll();
+      } catch (e) {
+        expect(() => {
+          throw new Error(APPLICATION_ERROR);
+        }).toThrow(Error);
+      }
+    });
+
+    it(`should throw error when server returns status 500 when trying to fetch '${get{{ inputs.value | pascal }}sByAlbumIdUrl(
+      '{albumId}'
+    )}`, async () => {
+      try {
+        await {{ inputs.value | camel }}Service.getByAlbumId(1);
+      } catch (e) {
+        expect(() => {
+          throw new Error(APPLICATION_ERROR);
+        }).toThrow(Error);
+      }
+      try {
+        await {{ inputs.value | camel }}Service.getByAlbumId(2);
+      } catch (e) {
+        expect(() => {
+          throw new Error(APPLICATION_ERROR);
+        }).toThrow(Error);
+      }
+      try {
+        await {{ inputs.value | camel }}Service.getByAlbumId(3);
+      } catch (e) {
+        expect(() => {
+          throw new Error(APPLICATION_ERROR);
+        }).toThrow(Error);
+      }
+    });
+  });
+});
+```
+````
+
+1. Create the file `.scaffdog/page.md` with this:
+
+````md:
+---
+name: 'page'
+root: '.'
+output: 'src/Pages/'
+ignore: ['.', 'src/Pages/**/*']
+questions:
+  value: 'Please, enter the page name:'
+---
+
+# `{{ inputs.value | pascal }}/index.ts`
+
+```ts:
+export * from './{{ inputs.value | pascal }}';
+```
+
+# `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.tsx`
+
+```tsx:
+import { PageContainer } from '../../App.styles';
+import { TestProps } from '../../Config/Tests/Test.types';
+
+export const {{ inputs.value | camel }}Defaults: Required<TestProps> = {
+  testID: '{{ inputs.value | pascal }}',
+};
+
+export const {{ inputs.value | pascal }}: React.FC = (): JSX.Element => {
+  return (
+    <PageContainer data-testid={ {{ inputs.value | camel }}Defaults.testID}>
+      teste
+    </PageContainer>
+  );
+};
+```
+
+# `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.styles.ts`
+
+```ts:
+import styled from 'styled-components';
+
+export const {{ inputs.value | pascal }}Container = styled.div`
+  color: ${({ theme }) => theme.colors.font.default};
+`;
+```
 ````
 
 ### Configuring pre-commit hook and commit-msg
 
-1. Run `yarn add -D -W commitizen cz-conventional-changelog husky lerna`
+1. Run `yarn add -D -W commitizen cz-conventional-changelog husky`
 1. Run `commitizen init cz-conventional-changelog --yarn --dev --exact`
 1. Add these scripts to package.json scripts:
 
@@ -1396,7 +1736,6 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
   "*.{ts,tsx}": ["yarn lint", "bash -c 'yarn type-check'"],
   "*.{js,jsx,ts,tsx,css,scss,sass,md,html,json}": "yarn format"
 }
-
 ```
 
 1. Run `yarn husky add .husky/pre-commit "yarn test"`
@@ -1404,6 +1743,7 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
 
 ### Configuring angular
 
+1. Run `npm i -g @angular/cli`
 1. Run `ng new challenge-solving-platform --create-application false --force`
 1. Run `lerna-wizard` to create the `angular` package
 1. Update "name" in package.json from "angular" to "@challenge-solving/angular"

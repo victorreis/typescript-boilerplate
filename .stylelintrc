@@ -1,5 +1,11 @@
 {
-  "extends": ["stylelint-config-recommended", "stylelint-config-prettier"],
+  "processors": ["stylelint-processor-styled-components"],
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-prettier",
+    "stylelint-config-styled-components"
+  ],
+  "ignoreFiles": ["**/*.d.ts"],
   "rules": {
     "property-no-vendor-prefix": 0
   }
