@@ -171,7 +171,7 @@ trim_trailing_whitespace = false
     "disableSizeLimit": true,
 
     /* Language and Environment */
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "es5", "esnext"],
     "jsx": "react-jsx",
     "experimentalDecorators": true,
@@ -188,20 +188,10 @@ trim_trailing_whitespace = false
     // "rootDir": "./",
     "moduleResolution": "node",
     "baseUrl": "./",
-    "paths": {
-      "@code-challenges/angular": ["./packages/angular/src"],
-      "@code-challenges/expressjs-challenges": [
-        "./packages/expressjs-challenges/src"
-      ]
-    },
     // "rootDirs": [],
-    "typeRoots": [
-      "node_modules/@types",
-      "node_modules/@testing-library",
-      "packages/angular/src/@types",
-      "packages/expressjs-challenges/src/@types"
-    ],
-    "types": ["node", "jasmine"],
+    "typeRoots": ["node_modules/@types", "node_modules/@testing-library","packages/angular/src/@types",
+      "packages/expressjs-challenges/src/@types"],
+    "types": ["node", "jasmine", "jest", "react", "react-dom"],
     // "allowUmdGlobalAccess": true,
     "resolveJsonModule": true,
     // "noResolve": true,
@@ -212,6 +202,14 @@ trim_trailing_whitespace = false
     //     "minify": true
     //   }
     // ],
+
+    // LERNA ONLY
+    "paths": {
+      "@code-challenges/angular": ["./packages/angular/src"],
+      "@code-challenges/expressjs-challenges": [
+        "./packages/expressjs-challenges/src"
+      ]
+    },
 
     /* JavaScript Support */
     "allowJs": true,
@@ -314,29 +312,33 @@ __snapshots__
 1. Adding eslint devDependencies
 
 ```sh:
-yarn add -D -W eslint \
-lint-staged \
-prettier \
-stylelint \
-stylelint-config-prettier \
-stylelint-config-recommended \
-stylelint-prettier \
+yarn add -D -W @types/eslint-config-prettier \
+@types/eslint-plugin-markdown \
+@types/eslint-plugin-prettier \
 @typescript-eslint/eslint-plugin \
 @typescript-eslint/parser \
 eslint \
 eslint-config-airbnb \
 eslint-config-airbnb-typescript \
 eslint-config-prettier \
-eslint-import-resolver-typescript \
 eslint-plugin-import \
 eslint-plugin-import-helpers \
 eslint-plugin-jest \
+eslint-plugin-jest-react \
 eslint-plugin-jsx-a11y \
 eslint-plugin-markdown \
 eslint-plugin-prettier \
 eslint-plugin-promise \
 eslint-plugin-react \
-eslint-plugin-react-hooks
+eslint-plugin-react-hooks \
+lint-staged \
+stylelint \
+stylelint-config-prettier \
+stylelint-config-recommended \
+stylelint-config-standard \
+stylelint-config-styled-components \
+stylelint-prettier \
+stylelint-processor-styled-components
 ```
 
 1. Create `.stylelintrc` and add this to it:
@@ -355,6 +357,7 @@ eslint-plugin-react-hooks
 
 ```js:
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -392,15 +395,6 @@ module.exports = {
     sourceType: 'module',
   },
   settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-    'import/resolver': {
-      typescript: {
-        alwaysTryTypes: true,
-        project: ['tsconfig.json', 'packages/*/tsconfig.json'],
-      },
-    },
     react: {
       createClass: 'createReactClass',
       pragma: 'React',
@@ -422,57 +416,55 @@ module.exports = {
     formComponents: ['CustomForm', { name: 'Form', formAttribute: 'endpoint' }],
     linkComponents: ['Hyperlink', { name: 'Link', linkAttribute: 'to' }],
     jest: {
-      version: 27,
+      version: require('jest/package.json').version,
     },
   },
   extends: [
-    'airbnb',
-    'airbnb/hooks',
-    'airbnb-typescript',
     'eslint:recommended',
+    'airbnb',
+    'airbnb-typescript',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
-    'plugin:jest/recommended',
-    'plugin:jest/style',
-    'plugin:jest-react/recommended',
-    'plugin:jsx-a11y/recommended',
-    'plugin:markdown/recommended',
-    'plugin:prettier/recommended',
-    'plugin:promise/recommended',
     'plugin:react/all',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
+    'airbnb/hooks',
+    'plugin:jsx-a11y/recommended',
+    'plugin:jest/all',
+    'plugin:jest-react/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
+    'plugin:promise/recommended',
+    'plugin:markdown/recommended',
   ],
   plugins: [
-    'import',
-    'import-helpers',
-    'jsx-a11y',
-    'prettier',
-    'promise',
+    '@typescript-eslint',
     'react',
     'react-hooks',
-    '@typescript-eslint',
+    'jsx-a11y',
     'jest',
     'jest-react',
+    'import',
+    'import-helpers',
+    'prettier',
+    'promise',
+    'markdown',
   ],
   rules: {
+    '@typescript-eslint/comma-dangle': 0,
     '@typescript-eslint/explicit-member-accessibility': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/indent': 0,
     '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-extraneous-class': 0,
     '@typescript-eslint/no-floating-promises': 0,
     '@typescript-eslint/no-misused-promises': 0,
-    'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': [2, { varsIgnorePattern: 'React' }],
-    'comma-dangle': 0,
-    '@typescript-eslint/comma-dangle': 0,
-    'no-use-before-define': 0,
     '@typescript-eslint/no-use-before-define': 2,
     curly: 2,
+    'implicit-arrow-linebreak': 0,
     'import/order': 0,
     'import/prefer-default-export': 0,
     'import-helpers/order-imports': [
@@ -488,11 +480,9 @@ module.exports = {
       },
     ],
     'jest/no-conditional-expect': 0,
-    'jest/no-disabled-tests': 'warn',
-    'jest/no-focused-tests': 'error',
-    'jest/no-identical-title': 'error',
-    'jest/prefer-to-have-length': 'warn',
-    'jest/valid-expect': 'error',
+    'jest/no-hooks': 0,
+    'jest/require-hook': 0,
+    'jsx-a11y/control-has-associated-label': 0,
     'no-alert': 2,
     'no-console': [
       2,
@@ -513,7 +503,7 @@ module.exports = {
       'TSEnumDeclaration',
     ],
     'no-undef': 2,
-    'no-unused-vars': 2,
+    'operator-linebreak': 0,
     'prefer-template': 2,
     'prettier/prettier': [
       'error',
@@ -524,6 +514,7 @@ module.exports = {
     ],
     radix: 2,
     'react/destructuring-assignment': 2,
+    'react/forbid-component-props': 0,
     'react/function-component-definition': [
       2,
       {
@@ -538,11 +529,25 @@ module.exports = {
         extensions: ['.jsx', '.tsx'],
       },
     ],
+    'react/jsx-indent': 0,
+    'react/jsx-indent-props': 0,
+    'react/jsx-max-props-per-line': [2, { maximum: 1, when: 'multiline' }],
     'react/jsx-props-no-spreading': 0,
     'react/jsx-max-depth': [2, { max: 3 }],
     'react/jsx-newline': 0,
+    'react/jsx-no-bind': [
+      2,
+      {
+        ignoreDOMComponents: false,
+        ignoreRefs: false,
+        allowArrowFunctions: true,
+        allowFunctions: false,
+        allowBind: false,
+      },
+    ],
     'react/jsx-no-literals': 0,
     'react/jsx-one-expression-per-line': 0,
+    'react/jsx-props-no-spreading': 0,
     'react/prop-types': 0,
     'react/self-closing-comp': [
       2,
@@ -556,21 +561,6 @@ module.exports = {
     'testing-library/await-async-query': 0,
     'testing-library/no-await-sync-query': 0,
   },
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      parserOptions: {
-        project: ['./tsconfig.json'],
-      },
-    },
-    {
-      files: ['src/**/*.test.tsx', 'src/**/*.test.ts', 'src/**/*.config.tsx'],
-      rules: {
-        'import/no-extraneous-dependencies': 0,
-        'testing-library/await-async-query': 0,
-      },
-    },
-  ],
 };
 ```
 
@@ -608,24 +598,22 @@ __snapshots__
 
 ### [REACT ONLY] Configuring Styled Components
 
-1. Run `yarn add styled-components` and then the scripts below:
+1. Run `yarn add styled-components postcss-syntax @stylelint/postcss-css-in-js` and then the scripts below:
 
 ```sh:
 yarn add -D @babel/core \
+@babel/plugin-transform-react-jsx \
 @babel/preset-env \
 @babel/preset-react \
 @babel/preset-typescript \
 @types/styled-components \
 @types/styled-theming \
+babel-jest \
 babel-plugin-styled-components \
 jest-styled-components \
 styled-normalize \
 styled-theming \
-stylelint \
-stylelint-config-prettier \
-stylelint-config-recommended \
 stylelint-config-styled-components \
-stylelint-prettier \
 stylelint-processor-styled-components \
 typescript-plugin-styled-components
 ```
@@ -636,11 +624,12 @@ typescript-plugin-styled-components
 {
   "processors": ["stylelint-processor-styled-components"],
   "extends": [
-    "stylelint-config-recommended",
+    "stylelint-config-standard",
     "stylelint-config-prettier",
     "stylelint-config-styled-components"
   ],
-  "ignoreFiles": ["**/*.d.ts"],
+  "customSyntax": "@stylelint/postcss-css-in-js",
+  "ignoreFiles": ["**/*.d.ts", "**/*.tsx"],
   "rules": {
     "property-no-vendor-prefix": null
   }
@@ -654,9 +643,20 @@ module.exports = {
   presets: [
     ['@babel/preset-env', { targets: { node: 'current' } }],
     ['@babel/preset-typescript', { targets: { node: 'current' } }],
-    ['@babel/preset-react', { targets: { node: 'automatic' } }],
+    [
+      '@babel/preset-react',
+      { targets: { node: 'automatic' }, runtime: 'automatic' },
+    ],
   ],
   plugins: [
+    [
+      '@babel/plugin-transform-react-jsx',
+      {
+        throwIfNamespace: true,
+        runtime: 'automatic',
+        importSource: 'react',
+      },
+    ],
     [
       '@babel/plugin-transform-runtime',
       {
@@ -666,9 +666,10 @@ module.exports = {
     [
       'babel-plugin-styled-components',
       {
-        namespace: 'photo-discovery',
+        namespace: require('./package.json').name,
         displayName: true,
         fileName: false,
+        pure: true,
       },
     ],
   ],
@@ -679,7 +680,7 @@ module.exports = {
 
 ```json:
 "lint:ts": "eslint --quiet --fix . -c ./.eslintrc.js",
-"lint:css": "stylelint './src/**/*.styles.ts' --config .stylelintrc -f verbose",
+"lint:css": "stylelint ./src/**/*.styles.ts --config .stylelintrc",
 "lint": "yarn lint:ts && yarn lint:css",
 "lint:report": "yarn lint -f json -o reports/eslint-report.json",
 ```
@@ -701,7 +702,9 @@ module.exports = {
 1. Update the `src/App.tsx` file to this code:
 
 ```tsx:
-export function App() {
+import { FC } from 'react';
+
+export const App: FC = (): JSX.Element => {
   return (
     <div className="App">
       <header className="App-header">
@@ -725,7 +728,7 @@ export function App() {
 1. Add the normalize to `src/index.tsx` by updating the code to this:
 
 ```tsx:
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Normalize } from 'styled-normalize';
@@ -733,10 +736,10 @@ import { Normalize } from 'styled-normalize';
 import { App } from './App';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <Normalize />
     <App />
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root')
 );
 
@@ -781,60 +784,56 @@ export interface CustomThemeType {
 
 ```ts:
 import 'styled-components';
-import { PhotoDiscoveryThemeType } from './Theme/Types/PhotoDiscoveryTheme.types';
+import { CustomThemeType } from './Theme/Types';
 
 declare module 'styled-components' {
-  export interface DefaultTheme extends PhotoDiscoveryThemeType {}
+  export interface DefaultTheme extends CustomThemeType {}
 }
 ```
 
 1. Create the file `src/Theme/CustomThemeProvider/CustomThemeProvider.types.ts` and add this code:
 
 ```ts:
-import { CustomThemeType, Mode } from '../Types';
+import { CustomThemeType, ThemeMode } from '../Types';
 
 export type ThemeContextType = {
   theme: CustomThemeType;
-  switchTheme: (themeMode: Mode) => void;
+  switchTheme: (themeMode: ThemeMode) => void;
 };
 
-export type CustomThemeProviderProps = { testID?: string; themeName?: Mode };
+export type CustomThemeProviderProps = {
+  testID?: string;
+  themeName?: ThemeMode;
+};
 ```
 
 1. Create the file `src/Theme/CustomThemeProvider/CustomThemeProvider.tsx` and add this code:
 
 ```tsx:
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState, createContext } from 'react';
 
 import { ThemeProvider } from 'styled-components';
 
-import {
-  lightTheme,
-  darkTheme,
-  futuristicTheme,
-  deepSpaceTheme,
-} from '../Modes';
-import { Mode, CustomThemeType } from '../Types';
+import { darkTheme, deepSpaceTheme } from '../Modes';
+import { ThemeMode, CustomThemeType } from '../Types';
 import {
   ThemeContextType,
   CustomThemeProviderProps,
 } from './CustomThemeProvider.types';
 
-export const themes: Record<Mode | 'default', CustomThemeType> = {
-  default: deepSpaceTheme,
-  light: lightTheme,
+export const themes: Record<ThemeMode | 'default', CustomThemeType> = {
+  default: darkTheme,
   dark: darkTheme,
-  futuristic: futuristicTheme,
   deepSpace: deepSpaceTheme,
 };
 
-export const ThemeContext = React.createContext<
+export const ThemeContext = createContext<
   ThemeContextType | Record<string, never>
 >({});
 
 export const customThemeProviderDefaults: Required<CustomThemeProviderProps> = {
   testID: 'ThemeContextProvider',
-  themeName: 'deepSpace',
+  themeName: 'dark',
 };
 
 export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (
@@ -848,7 +847,7 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (
 
   const [theme, setTheme] = useState<CustomThemeType>(themes[themeName]);
 
-  const switchTheme = (themeMode: Mode): void => {
+  const switchTheme = (themeMode: ThemeMode): void => {
     setTheme(themes[themeMode]);
   };
 
@@ -866,22 +865,6 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (
 
 ```ts:
 export * from './CustomThemeProvider';
-```
-
-1. Create the file `src/globals.d.ts` and add this code:
-
-```ts:
-import 'styled-components';
-import { CustomThemeType } from './Theme/Types';
-
-declare module 'styled-components' {
-  export interface DefaultTheme extends CustomThemeType {}
-}
-
-declare module '*.svg' {
-  const content: string;
-  export default content;
-}
 ```
 
 1. Create the file `src/App.styles.ts` and add this code:
@@ -925,18 +908,16 @@ export const PageContainer = styled.div`
 1. Replace the code of the file `src/App.tsx` with this code:
 
 ```tsx:
-import React from 'react';
+import { FC } from 'react';
 
 import { Container } from './App.styles';
 import { CustomThemeProvider } from './Theme/CustomThemeProvider';
 
-export const App: React.FC = (): JSX.Element => {
-  return (
-    <CustomThemeProvider>
-      <Container data-testid="container">hello world</Container>
-    </CustomThemeProvider>
-  );
-};
+export const App: FC = (): JSX.Element => (
+  <CustomThemeProvider>
+    <Container data-testid="container">hellow world!</Container>
+  </CustomThemeProvider>
+);
 ```
 
 1. Delete the files `src/logo.svg`, `src/App.css`, `index.css` and `setupTests.ts`.
@@ -1093,7 +1074,7 @@ module.exports = {
   // runner: 'jest-runner',
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ['dotenv/config'],
+  // setupFiles: ['dotenv/config'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
@@ -1256,7 +1237,7 @@ describe('App component tests', () => {
 
 1. Run `yarn add -D scaffdog`
 1. Run `yarn scaffdog init` and then enter `component`
-1. Replace the content of `.scaffdog/component.md` with this:
+1. Replace the content of `.scaffdog/component.template.md` with this:
 
 ````md:
 ---
@@ -1273,7 +1254,6 @@ questions:
 ```ts:
 export * from './{{ inputs.value | pascal }}.types';
 export * from './{{ inputs.value | pascal }}';
-
 ```
 
 # `{{ inputs.value | pascal }}/{{ inputs.value | pascal }}.types.ts`
@@ -1375,7 +1355,7 @@ import { hexToRgb } from '../../Utils/Transform';
 import { {{ inputs.value | pascal }}, {{ inputs.value | camel }}Defaults } from './{{ inputs.value | pascal }}';
 import { Required{{ inputs.value | pascal }}Props, {{ inputs.value | pascal }}Props } from './{{ inputs.value | pascal }}.types';
 
-describe(`{{ inputs.value | pascal }} component tests`, () => {
+describe('{{ inputs.value | pascal }} component tests', () => {
   const text = 'text';
   const newVariant = 'h1';
 
@@ -1398,8 +1378,9 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     return { renderRTR, renderJestDom };
   };
 
-  describe(`behavior tests`, () => {
+  describe('behavior tests', () => {
     it(`should render the component`, () => {
+      expect.assertions(1);
       setup().renderJestDom();
       const testInstance = screen.getByTestId({{ inputs.value | camel }}Defaults.testID);
 
@@ -1407,6 +1388,7 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     });
 
     it(`should render the text`, () => {
+      expect.assertions(1);
       setup().renderJestDom();
       const element = screen.getByText(text);
 
@@ -1414,7 +1396,9 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     });
 
     it(`should render '${ {{ inputs.value | camel }}Defaults.variant}' as the default variant`, () => {
-      const instance = setup().renderRTR().root;
+      expect.assertions(1);
+const instance =
+      setup().renderRTR().root;
       const element = instance.findByProps({
         variant: {{ inputs.value | camel }}Defaults.variant,
       });
@@ -1423,7 +1407,10 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     });
 
     it(`should override the default variant when it is passed as prop`, () => {
-      const instance = setup({
+      expect.assertions(1);
+const instance =
+
+      setup({
         ...requiredProps,
         variant: newVariant,
       }).renderRTR().root;
@@ -1433,8 +1420,9 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     });
   });
 
-  describe(`style tests`, () => {
+  describe('style tests', () => {
     it(`should have style the Container component`, () => {
+      expect.assertions(1);
       setup().renderJestDom();
       const container = screen.getByTestId({{ inputs.value | camel }}Defaults.testID);
 
@@ -1445,9 +1433,11 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
     });
   });
 
-  describe(`snapshot tests`, () => {
+  describe('snapshot tests', () => {
     it(`should render correctly`, () => {
+      expect.assertions(1);
       const generatedJson = setup().renderRTR().toJSON();
+
       expect(generatedJson).toMatchSnapshot();
     });
   });
@@ -1455,7 +1445,7 @@ describe(`{{ inputs.value | pascal }} component tests`, () => {
 ```
 ````
 
-1. Create the file `.scaffdog/apiConsumerService.md` with this:
+1. Create the file `.scaffdog/apiConsumerService.template.md` with this:
 
 ````md:
 ---
@@ -1522,7 +1512,7 @@ import { API_URL, APPLICATION_ERROR } from '../../Config/constants';
 import { {{ inputs.value | camel }}Service } from './{{ inputs.value | pascal }}.service';
 import { {{ inputs.value | pascal }} } from './{{ inputs.value | pascal }}.types';
 
-describe(`{{ inputs.value | pascal }} service tests`, () => {
+describe('{{ inputs.value | pascal }} service tests', () => {
   global.console.error = jest.fn();
 
   const {{ inputs.value | camel }}sUrl = `${API_URL}/{{ inputs.value | camel }}s`;
@@ -1588,7 +1578,7 @@ describe(`{{ inputs.value | pascal }} service tests`, () => {
     )
   );
 
-  describe(`Successful tests`, () => {
+  describe('Successful tests', () => {
     beforeAll(() => server.listen());
     afterEach(() => server.resetHandlers());
     afterAll(() => server.close());
@@ -1603,12 +1593,15 @@ describe(`{{ inputs.value | pascal }} service tests`, () => {
       '{albumId}'
     )}`, async () => {
       const {{ inputs.value | camel }}s1 = await {{ inputs.value | camel }}Service.getByAlbumId(1);
+
       expect({{ inputs.value | camel }}s1).toEqual(filterDataByAlbumId(1));
 
       const {{ inputs.value | camel }}s2 = await {{ inputs.value | camel }}Service.getByAlbumId(2);
+
       expect({{ inputs.value | camel }}s2).toEqual(filterDataByAlbumId(2));
 
       const {{ inputs.value | camel }}s3 = await {{ inputs.value | camel }}Service.getByAlbumId(3);
+
       expect({{ inputs.value | camel }}s3).toEqual(filterDataByAlbumId(3));
     });
 
@@ -1616,11 +1609,12 @@ describe(`{{ inputs.value | pascal }} service tests`, () => {
       '{albumId}'
     )} when '{albumId}' doesn't exists`, async () => {
       const {{ inputs.value | camel }}s = await {{ inputs.value | camel }}Service.getByAlbumId(unexistentAlbumId);
+
       expect({{ inputs.value | camel }}s).toEqual(filterDataByAlbumId(unexistentAlbumId));
     });
   });
 
-  describe(`Unsuccessful tests`, () => {
+  describe('Unsuccessful tests', () => {
     beforeAll(() => serverError.listen());
     afterEach(() => serverError.resetHandlers());
     afterAll(() => serverError.close());
@@ -1665,7 +1659,7 @@ describe(`{{ inputs.value | pascal }} service tests`, () => {
 ```
 ````
 
-1. Create the file `.scaffdog/page.md` with this:
+1. Create the file `.scaffdog/page.template.md` with this:
 
 ````md:
 ---
@@ -1721,14 +1715,16 @@ export const {{ inputs.value | pascal }}Container = styled.div`
 
 ```json:
 "prepare": "husky install",
-"lint": "eslint --quiet --fix . -c ./.eslintrc.js",
+"lint:ts": "eslint --quiet --fix . -c ./.eslintrc.js",
+"lint:css": "stylelint ./src/**/*.styles.ts --config .stylelintrc",
+"lint": "yarn lint:ts && yarn lint:css",
 "lint:report": "yarn lint -f json -o reports/eslint-report.json",
 "type-check": "tsc --noEmit",
 "format": "prettier --config .prettierrc --write .",
 ```
 
 1. Create `.czrc` file and add `{ "path": "cz-conventional-changelog" }` to it
-1. Run `yarn husky add .husky/prepare-commit-msg "exec < /dev/tty && git cz --hook || true"`
+1. Run `yarn husky add .husky/prepare-commit-msg "exec < /dev/tty && node_modules/.bin/cz --hook || true"`
 1. Create `.lintstagedrc.json` and add:
 
 ```json:
@@ -1739,7 +1735,7 @@ export const {{ inputs.value | pascal }}Container = styled.div`
 ```
 
 1. Run `yarn husky add .husky/pre-commit "yarn test"`
-1. Run `yarn husky add .husky/pre-commit "yarn lint-staged"`
+1. Run `yarn husky add .husky/pre-commit "node_modules/.bin/lint-staged"`
 
 ### Configuring angular
 
