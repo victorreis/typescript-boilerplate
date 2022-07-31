@@ -10,7 +10,7 @@
 1. Create `.npmrc` and add this to it:
 
 ```plain-text:
-node-version=16.x.x
+node-version=16.14.2
 engine-strict=true
 package-lock=false
 registry=https://registry.npmjs.org/
@@ -128,6 +128,7 @@ indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
+end_of_line = lf
 
 [*.ts]
 quote_type = single
@@ -135,6 +136,7 @@ quote_type = single
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
+
 ```
 
 ### Configuring the workspace
@@ -144,6 +146,7 @@ trim_trailing_whitespace = false
 
 ### Configuring tsconfig.json
 
+1. Run `yarn add typescript -D`
 1. Run `yarn tsc --init` and uncomment what you need or put this code below:
 
 ```json:
@@ -158,7 +161,8 @@ trim_trailing_whitespace = false
     "**/docs",
     "**/lib",
     "**/dist",
-    "**/reports"
+    "**/reports",
+    "**/__mocks__"
   ],
   "compilerOptions": {
     /* Projects */
@@ -276,7 +280,7 @@ trim_trailing_whitespace = false
 
 ### Configuring prettier
 
-1. Run `yarn add -D -W prettier`
+1. Run `yarn add -D prettier`
 1. Copy and paste `.gitignore`, rename to `.prettierignore` and add this code to the end:
 
 ```plain-text:
@@ -312,7 +316,7 @@ __snapshots__
 1. Adding eslint devDependencies
 
 ```sh:
-yarn add -D -W @types/eslint-config-prettier \
+yarn add -D @types/eslint-config-prettier \
 @types/eslint-plugin-markdown \
 @types/eslint-plugin-prettier \
 @typescript-eslint/eslint-plugin \
@@ -706,20 +710,8 @@ import { FC } from 'react';
 
 export const App: FC = (): JSX.Element => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      Home page
     </div>
   );
 }
@@ -801,40 +793,50 @@ export type ThemeContextType = {
   switchTheme: (themeMode: ThemeMode) => void;
 };
 
-export type CustomThemeProviderProps = {
+export interface RequiredCustomThemeProviderProps {
+  children?: React.ReactNode;
+}
+
+export interface DefaultCustomThemeProviderProps {
   testID?: string;
   themeName?: ThemeMode;
-};
+}
+
+export type CustomThemeProviderProps = RequiredCustomThemeProviderProps &
+  DefaultCustomThemeProviderProps;
+
 ```
 
 1. Create the file `src/Theme/CustomThemeProvider/CustomThemeProvider.tsx` and add this code:
 
 ```tsx:
 import { useMemo, useState, createContext } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 import { ThemeProvider } from 'styled-components';
 
-import { darkTheme, deepSpaceTheme } from '../Modes';
+import { darkTheme } from '../Modes';
 import { ThemeMode, CustomThemeType } from '../Types';
 import {
   ThemeContextType,
   CustomThemeProviderProps,
+  DefaultCustomThemeProviderProps,
 } from './CustomThemeProvider.types';
 
 export const themes: Record<ThemeMode | 'default', CustomThemeType> = {
   default: darkTheme,
   dark: darkTheme,
-  deepSpace: deepSpaceTheme,
 };
 
 export const ThemeContext = createContext<
   ThemeContextType | Record<string, never>
 >({});
 
-export const customThemeProviderDefaults: Required<CustomThemeProviderProps> = {
-  testID: 'ThemeContextProvider',
-  themeName: 'dark',
-};
+export const customThemeProviderDefaults: Required<DefaultCustomThemeProviderProps> =
+  {
+    testID: 'ThemeContextProvider',
+    themeName: 'dark',
+  };
 
 export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (
   props
@@ -855,7 +857,9 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = (
 
   return (
     <ThemeContext.Provider data-testid={testID} value={providerValue}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>{children}</BrowserRouter>
+      </ThemeProvider>
     </ThemeContext.Provider>
   );
 };
@@ -870,14 +874,17 @@ export * from './CustomThemeProvider';
 1. Create the file `src/App.styles.ts` and add this code:
 
 ```ts:
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
-export const Container = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.default.darkest};
-  position: absolute;
-  width: 100%;
-  height: 100%;
+export const GlobalStyle = createGlobalStyle`
+  body {
+    overflow: hidden;
+  }
+`;
+
+export const ContainerScroll = styled.div`
   overflow-x: hidden;
+  overflow-y: scroll;
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -897,12 +904,23 @@ export const Container = styled.div`
   }
 `;
 
-export const PageContainer = styled.div`
-  padding: 0 2rem;
-  margin-bottom: 5rem;
+export const Container = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.colors.background.default.darkest};
   overflow-x: hidden;
   overflow-y: hidden;
 `;
+
+export const PageContainer = styled(ContainerScroll)`
+  padding: 0 2rem;
+  height: 100vh;
+`;
+
 ```
 
 1. Replace the code of the file `src/App.tsx` with this code:
@@ -910,14 +928,20 @@ export const PageContainer = styled.div`
 ```tsx:
 import { FC } from 'react';
 
-import { Container } from './App.styles';
+import { Container, GlobalStyle } from './App.styles';
 import { CustomThemeProvider } from './Theme/CustomThemeProvider';
 
-export const App: FC = (): JSX.Element => (
-  <CustomThemeProvider>
-    <Container data-testid="container">hellow world!</Container>
-  </CustomThemeProvider>
-);
+export const App: FC = (): JSX.Element => {
+  return (
+    <CustomThemeProvider>
+      <GlobalStyle />
+      <Container data-testid="container">
+        hello world!
+      </Container>
+    </CustomThemeProvider>
+  );
+};
+
 ```
 
 1. Delete the files `src/logo.svg`, `src/App.css`, `index.css` and `setupTests.ts`.
@@ -950,6 +974,7 @@ react-test-renderer
 
 ```json:
 "test": "jest --config=jest.config.js",
+"test:dev": "jest --config=jest.config.js --watchAll",
 ```
 
 1. Create the `jest.config.js` file and copy and paste the code below, or run `jest --init` to create and configure it manually:
@@ -1145,9 +1170,10 @@ module.exports = {
 1. Create the file `src/Config/Tests/GlobalSetup.config.tsx` and copy and paste the following code:
 
 ```ts:
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/no-extraneous-dependencies */
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as React from 'react';
+import { createElement, FC } from 'react';
 import { create } from 'react-test-renderer';
 
 import { render } from '@testing-library/react';
@@ -1156,20 +1182,20 @@ import '@testing-library/jest-dom';
 import { CustomThemeProvider } from '../../Theme/CustomThemeProvider';
 
 const renderJestDomCreator = <ComponentProps extends Record<string, any>>(
-  componentReference: React.FC<ComponentProps>,
+  componentReference: FC<ComponentProps>,
   props: ComponentProps
 ) =>
-  render(React.createElement(componentReference, { ...props }), {
+  render(createElement(componentReference, { ...props }), {
     wrapper: CustomThemeProvider,
   });
 
 const renderRTRCreator = <ComponentProps extends Record<string, any>>(
-  componentReference: React.FC<ComponentProps>,
+  componentReference: FC<ComponentProps>,
   props: ComponentProps
 ) =>
   create(
     <CustomThemeProvider>
-      {React.createElement(componentReference, { ...props })}
+      {createElement(componentReference, { ...props })}
     </CustomThemeProvider>
   );
 
@@ -1709,8 +1735,8 @@ export const {{ inputs.value | pascal }}Container = styled.div`
 
 ### Configuring pre-commit hook and commit-msg
 
-1. Run `yarn add -D -W commitizen cz-conventional-changelog husky`
-1. Run `commitizen init cz-conventional-changelog --yarn --dev --exact`
+1. Run `yarn add -D commitizen cz-conventional-changelog husky`
+1. Run `yarn commitizen init cz-conventional-changelog --yarn --dev --exact`
 1. Add these scripts to package.json scripts:
 
 ```json:
